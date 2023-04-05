@@ -1,0 +1,20 @@
+package com.zc.dictionarygenius.data
+
+import com.zc.dictionarygenius.data.Endpoint.SecurityContact.SECURITY_CONTACT_SEND_EMAIL
+import com.zc.dictionarygenius.data.Endpoint.SecurityContact.WORK
+import com.zc.dictionarygenius.data.model.DictionaryResponse
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
+
+interface Endpoint {
+    @GET(SECURITY_CONTACT_SEND_EMAIL)
+    fun getPosts(
+        @Path(WORK) word: String
+    ) : Call<List<DictionaryResponse>>
+
+    private object SecurityContact {
+        const val WORK = "word"
+        const val SECURITY_CONTACT_SEND_EMAIL = "en/{$WORK}"
+    }
+}
