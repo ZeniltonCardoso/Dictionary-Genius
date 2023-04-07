@@ -22,8 +22,6 @@ fun AccountsScreen(
     StatementBody(
         modifier = Modifier.semantics { contentDescription = "Accounts Screen" },
         items = UserData.accounts,
-        amounts = { account -> account.balance },
-        colors = { account -> account.color },
         amountsTotal = amountsTotal,
         circleLabel = stringResource(R.string.total),
         rows = { account ->
