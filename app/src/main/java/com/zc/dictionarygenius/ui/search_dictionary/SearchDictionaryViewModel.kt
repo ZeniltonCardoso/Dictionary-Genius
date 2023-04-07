@@ -1,4 +1,4 @@
-package com.zc.dictionarygenius.ui.overview
+package com.zc.dictionarygenius.ui.search_dictionary
 
 import android.content.Context
 import android.widget.Toast
