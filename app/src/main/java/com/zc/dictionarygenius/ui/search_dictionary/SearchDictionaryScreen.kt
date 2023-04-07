@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -18,12 +19,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -36,10 +40,12 @@ import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.R
 import com.zc.dictionarygenius.data.model.DictionaryResponse
 import com.zc.dictionarygenius.ui.components.SearchBar
+import kotlinx.coroutines.delay
 
 private var searchInput by mutableStateOf("")
 private var dictionaryResponse by mutableStateOf(DictionaryResponse())
 
+@OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun SearchDictionaryScreen(
@@ -47,6 +53,7 @@ fun SearchDictionaryScreen(
     viewModel: SearchDictionaryViewModel = viewModel()
 ) {
     val context = LocalContext.current
+    val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = Modifier
             .background(color = Color.DarkGray)
@@ -64,16 +71,28 @@ fun SearchDictionaryScreen(
             color = Color.Blue,
             onValueChanged = {
                 searchInput = it
-                if (searchInput.length >= 2)
-                    viewModel.getWordsEnglish(context, searchInput)
             },
             onIconCloseClick = {
                 searchInput = ""
+                keyboardController?.hide()
             }
         )
         viewModel.uiState.map {
             dictionaryResponse = it
         }
+        LaunchedEffect(key1 = searchInput, block = {
+            when {
+                searchInput.length == 2 -> {
+                    delay(500)
+                    viewModel.getWordsEnglish(context, searchInput)
+                }
+
+                searchInput.length > 2 -> {
+                    delay(1_350)
+                    viewModel.getWordsEnglish(context, searchInput)
+                }
+            }
+        })
         if (searchInput.length >= 2) {
             Spacer(Modifier.height(DefaultPadding))
             Card(
@@ -102,18 +121,24 @@ fun SearchDictionaryScreen(
                                 Color.White
                             )
                         )
-                        it.definitions?.map { text ->
-                            if (text.example.isNotEmpty())
+                        it.definitions?.let { definitions ->
+                            val resultado = definitions.joinToString(separator = "\n") { example ->
+                                example.example
+                            }
+                            if (resultado.isNotEmpty()) {
+                                Spacer(modifier = Modifier.size(8.dp))
                                 Text(
                                     modifier = Modifier
                                         .padding(bottom = 8.dp)
                                         .fillMaxWidth(),
                                     textAlign = TextAlign.Center,
-                                    text = "Definitions: ${text.example}",
+                                    text = "Definitions: $resultado",
                                     style = MaterialTheme.typography.body2.copy(
                                         Color.White
                                     )
                                 )
+                            }
+                            keyboardController?.hide()
                         }
                     }
                 }

@@ -2,3 +2,7 @@
 *.bin
 
 *.lock
+
+.gradle/8.0/executionHistory/
+
+.gradle/8.0/fileHashes/
