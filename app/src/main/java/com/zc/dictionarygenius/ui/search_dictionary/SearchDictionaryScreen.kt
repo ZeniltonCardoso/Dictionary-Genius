@@ -1,4 +1,4 @@
-package com.zc.dictionarygenius.ui.overview
+package com.zc.dictionarygenius.ui.search_dictionary
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke

@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.ui.accounts.AccountsScreen
 import com.zc.dictionarygenius.ui.bills.BillsScreen
-import com.zc.dictionarygenius.ui.overview.SearchDictionaryScreen
+import com.zc.dictionarygenius.ui.search_dictionary.SearchDictionaryScreen
 import com.zc.dictionarygenius.ui.theme.Theme
 
 class MainActivity : ComponentActivity() {
