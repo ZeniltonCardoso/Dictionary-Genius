@@ -1,40 +1,30 @@
 package com.zc.dictionarygenius.ui.search_dictionary
 
-import android.content.Context
-import android.widget.Toast
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.zc.dictionarygenius.data.Endpoint
-import com.zc.dictionarygenius.data.NetworkUtils
-import com.zc.dictionarygenius.data.model.DictionaryResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.zc.dictionarygenius.domain.model.DictionaryModel
+import com.zc.dictionarygenius.domain.usecase.GetEnglishDictionaryUseCase
+import com.zc.dictionarygenius.ui.components.mutableStateOf
+import com.zc.dictionarygenius.ui.components.postError
+import com.zc.dictionarygenius.ui.components.postSuccess
+import com.zc.dictionarygenius.ui.components.useCase
+import org.koin.core.component.KoinComponent
 
-class SearchDictionaryViewModel : ViewModel() {
+class SearchDictionaryViewModel : ViewModel(), KoinComponent {
 
-    private val _uiState = mutableStateOf(listOf<DictionaryResponse>())
+    private val getEnglishDictionaryUseCase: GetEnglishDictionaryUseCase by useCase()
+
+    private val _uiState by mutableStateOf<List<DictionaryModel>>()
     val uiState get() = _uiState.value
 
-    fun getWordsEnglish(context: Context?, searchInput: String) {
-        val retrofitClient = NetworkUtils
-            .getRetrofitInstance("https://api.dictionaryapi.dev/api/v2/entries/")
-
-        val endpoint = retrofitClient.create(Endpoint::class.java)
-        val callback = endpoint.getPosts(searchInput)
-
-        callback.enqueue(object : Callback<List<DictionaryResponse>> {
-            override fun onFailure(call: Call<List<DictionaryResponse>>, t: Throwable) {
-                Toast.makeText(context, t.message, Toast.LENGTH_SHORT).show()
+    fun getTermsFromAPi(searchInput: String) {
+        getEnglishDictionaryUseCase(
+            params = GetEnglishDictionaryUseCase.Param(searchInput),
+            onSuccess = {
+                _uiState.postSuccess(it)
+            },
+            onError = {
+                _uiState.postError(it)
             }
-
-            override fun onResponse(
-                call: Call<List<DictionaryResponse>>,
-                response: Response<List<DictionaryResponse>>
-            ) {
-                _uiState.value = response.body() ?: listOf()
-            }
-        })
+        )
     }
-
 }

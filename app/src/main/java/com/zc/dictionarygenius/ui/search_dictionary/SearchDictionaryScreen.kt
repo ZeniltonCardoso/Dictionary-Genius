@@ -38,12 +38,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.R
-import com.zc.dictionarygenius.data.model.DictionaryResponse
+import com.zc.dictionarygenius.domain.model.DictionaryModel
 import com.zc.dictionarygenius.ui.components.SearchBar
 import kotlinx.coroutines.delay
 
 private var searchInput by mutableStateOf("")
-private var dictionaryResponse by mutableStateOf(DictionaryResponse())
+private var dictionaryResponse by mutableStateOf(DictionaryModel())
 
 @OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("SuspiciousIndentation")
@@ -77,19 +77,19 @@ fun SearchDictionaryScreen(
                 keyboardController?.hide()
             }
         )
-        viewModel.uiState.map {
+        viewModel.uiState.data?.map {
             dictionaryResponse = it
         }
         LaunchedEffect(key1 = searchInput, block = {
             when {
                 searchInput.length == 2 -> {
                     delay(500)
-                    viewModel.getWordsEnglish(context, searchInput)
+                    viewModel.getTermsFromAPi(searchInput)
                 }
 
                 searchInput.length > 2 -> {
                     delay(1_350)
-                    viewModel.getWordsEnglish(context, searchInput)
+                    viewModel.getTermsFromAPi(searchInput)
                 }
             }
         })
