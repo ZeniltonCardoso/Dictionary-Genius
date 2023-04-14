@@ -8,6 +8,7 @@ import com.zc.dictionarygenius.di.databaseModule
 import com.zc.dictionarygenius.di.domainModule
 import com.zc.dictionarygenius.di.presentationModule
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
 class BaseApplication : Application() {
@@ -15,6 +16,7 @@ class BaseApplication : Application() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         startKoin {
+            androidLogger()
             modules(
                 listOf(
                     dataRemoteModule,
@@ -22,7 +24,8 @@ class BaseApplication : Application() {
                     presentationModule,
                     databaseModule
                 )
-            ).androidContext(applicationContext)
+            )
+            androidContext(applicationContext)
         }
     }
 }

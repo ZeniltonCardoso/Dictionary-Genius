@@ -10,9 +10,7 @@ import com.zc.dictionarygenius.ui.components.useCase
 import org.koin.core.component.KoinComponent
 
 class SearchDictionaryViewModel : ViewModel(), KoinComponent {
-
-    private val getEnglishDictionaryUseCase: GetEnglishDictionaryUseCase by useCase()
-
+    val getEnglishDictionaryUseCase: GetEnglishDictionaryUseCase by useCase()
     private val _uiState by mutableStateOf<List<DictionaryModel>>()
     val uiState get() = _uiState.value
 

@@ -1,4 +1,4 @@
-package com.zc.dictionarygenius.domain
+package com.zc.dictionarygenius.domain.core
 
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext

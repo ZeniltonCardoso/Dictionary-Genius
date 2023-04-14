@@ -1,6 +1,5 @@
 package com.zc.dictionarygenius.domain.core
 
-import com.zc.dictionarygenius.domain.ThreadContextProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.flow.Flow

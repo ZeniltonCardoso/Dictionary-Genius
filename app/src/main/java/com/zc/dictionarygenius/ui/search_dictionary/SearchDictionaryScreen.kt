@@ -1,6 +1,5 @@
 package com.zc.dictionarygenius.ui.search_dictionary
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -34,25 +32,23 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.R
 import com.zc.dictionarygenius.domain.model.DictionaryModel
 import com.zc.dictionarygenius.ui.components.SearchBar
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 private var searchInput by mutableStateOf("")
 private var dictionaryResponse by mutableStateOf(DictionaryModel())
 
 @OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SearchDictionaryScreen(
-    navHostController: NavHostController,
-    viewModel: SearchDictionaryViewModel = viewModel()
+    navHostController: NavHostController
 ) {
-    val context = LocalContext.current
+    val viewModel = koinViewModel<SearchDictionaryViewModel>()
     val keyboardController = LocalSoftwareKeyboardController.current
     Column(
         modifier = Modifier
