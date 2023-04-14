@@ -6,6 +6,7 @@ import com.zc.dictionarygenius.data_remote.WebServiceFactory
 import com.zc.dictionarygenius.data_remote.datasource.EnglishDictionaryDataSourceImpl
 import com.zc.dictionarygenius.data_remote.service.EnglishDictionaryService
 import org.koin.android.BuildConfig.DEBUG
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataRemoteModule = module {
