@@ -14,6 +14,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
+import androidx.compose.material.Colors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -32,23 +34,36 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.R
 import com.zc.dictionarygenius.domain.model.DictionaryModel
 import com.zc.dictionarygenius.ui.components.SearchBar
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-private var searchInput by mutableStateOf("")
 private var dictionaryResponse by mutableStateOf(DictionaryModel())
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SearchDictionaryScreen(
     navHostController: NavHostController
 ) {
     val viewModel = koinViewModel<SearchDictionaryViewModel>()
-    val keyboardController = LocalSoftwareKeyboardController.current
+    Handler(viewModel)
+    BodyScreen(viewModel)
+}
+
+@Composable
+fun Handler(viewModel: SearchDictionaryViewModel) {
+    viewModel.resultSearchState.stateHandler(
+        onSuccess = {
+            dictionaryResponse = it.firstOrNull() ?: DictionaryModel()
+        }
+    )
+}
+
+@Composable
+private fun BodyScreen(
+    viewModel: SearchDictionaryViewModel
+) {
     Column(
         modifier = Modifier
             .background(color = Color.DarkGray)
@@ -57,94 +72,101 @@ fun SearchDictionaryScreen(
             .semantics { contentDescription = "Overview Screen" }
             .padding(horizontal = 16.dp)
     ) {
-        SearchBar(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 32.dp),
-            value = searchInput,
-            hint = stringResource(R.string.search_your_word_here),
-            color = Color.Blue,
-            onValueChanged = {
-                searchInput = it
-            },
-            onIconCloseClick = {
-                searchInput = ""
-                keyboardController?.hide()
-            }
-        )
-        viewModel.uiState.data?.forEach {
-            dictionaryResponse = it
-        }
-        LaunchedEffect(key1 = searchInput, block = {
-            when {
-                searchInput.length == 2 -> {
-                    delay(500)
-                    viewModel.getTermsFromAPi(searchInput)
-                }
+        Search(viewModel)
+        BodyScreen(colors)
+    }
+}
 
-                searchInput.length > 2 -> {
-                    delay(1_350)
-                    viewModel.getTermsFromAPi(searchInput)
-                }
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun Search(
+    viewModel: SearchDictionaryViewModel
+) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    var searchInput by remember {
+        mutableStateOf("")
+    }
+    SearchBar(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp),
+        value = searchInput,
+        hint = stringResource(R.string.search_your_word_here),
+        color = Color.Blue,
+        onValueChanged = {
+            searchInput = it
+        },
+        onIconCloseClick = {
+            searchInput = ""
+            keyboardController?.hide()
+        }
+    )
+    LaunchedEffect(key1 = searchInput, block = {
+        when {
+            searchInput.length == 2 -> {
+                delay(500)
+                viewModel.searchEnglish(searchInput)
             }
-        })
-        if (!dictionaryResponse.meanings.isNullOrEmpty()) {
-            Spacer(Modifier.height(12.dp))
-            Card(
-                modifier = Modifier
-                    .padding(vertical = 24.dp, horizontal = 16.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(size = 8.dp),
-                border = BorderStroke(
-                    1.5f.dp,
-                    colors.primary
-                )
+
+            searchInput.length > 2 -> {
+                delay(1_350)
+                viewModel.searchEnglish(searchInput)
+            }
+        }
+    })
+}
+
+@Composable
+private fun BodyScreen(colors: Colors) {
+    if (!dictionaryResponse.meanings.isNullOrEmpty()) {
+        Spacer(Modifier.height(12.dp))
+        Card(
+            modifier = Modifier
+                .padding(vertical = 24.dp, horizontal = 16.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(size = 8.dp),
+            border = BorderStroke(
+                1.5f.dp,
+                colors.primary
+            )
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
-                ) {
-                    dictionaryResponse.meanings?.map {
-                        val joinToString = it.synonyms.joinToString(", ")
-                        if (it.synonyms.isNotEmpty()) Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp),
-                            textAlign = TextAlign.Center,
-                            text = "Synonyms: $joinToString.",
-                            style = MaterialTheme.typography.body2.copy(
-                                Color.White
-                            )
+                dictionaryResponse.meanings?.map {
+                    val joinToString = it.synonyms.joinToString(", ")
+                    if (it.synonyms.isNotEmpty()) Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        textAlign = TextAlign.Center,
+                        text = "Synonyms: $joinToString.",
+                        style = MaterialTheme.typography.body2.copy(
+                            Color.White
                         )
-                        it.definitions?.let { definitions ->
-                            val resultado = definitions.joinToString(separator = "\n") { example ->
-                                example.example
-                            }
-                            if (resultado.isNotEmpty()) {
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Text(
-                                    modifier = Modifier
-                                        .padding(bottom = 8.dp)
-                                        .fillMaxWidth(),
-                                    textAlign = TextAlign.Center,
-                                    text = "Definitions: $resultado",
-                                    style = MaterialTheme.typography.body2.copy(
-                                        Color.White
-                                    )
+                    )
+                    it.definitions?.let { definitions ->
+                        val result = definitions.joinToString(separator = "\n") { example ->
+                            example.example
+                        }
+                        if (result.isNotEmpty()) {
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(bottom = 8.dp)
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                text = "Definitions: $result",
+                                style = MaterialTheme.typography.body2.copy(
+                                    Color.White
                                 )
-                            }
-                            keyboardController?.hide()
+                            )
                         }
                     }
                 }
             }
         }
-    }
-
-    @Composable
-    fun ScreenPreview() {
-        val navController = rememberNavController()
-        SearchDictionaryScreen(navController)
     }
 }
 

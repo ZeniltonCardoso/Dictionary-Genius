@@ -11,17 +11,18 @@ import org.koin.core.component.KoinComponent
 
 class SearchDictionaryViewModel : ViewModel(), KoinComponent {
     val getEnglishDictionaryUseCase: GetEnglishDictionaryUseCase by useCase()
-    private val _uiState by mutableStateOf<List<DictionaryModel>>()
-    val uiState get() = _uiState.value
+    private val _resultSearchState by mutableStateOf<List<DictionaryModel>>()
+    val resultSearchState get() = _resultSearchState.value
 
-    fun getTermsFromAPi(searchInput: String) {
+    fun searchEnglish(searchInput: String) {
+        getEnglishDictionaryUseCase.cancel()
         getEnglishDictionaryUseCase(
             params = GetEnglishDictionaryUseCase.Param(searchInput),
             onSuccess = {
-                _uiState.postSuccess(it)
+                _resultSearchState.postSuccess(it)
             },
             onError = {
-                _uiState.postError(it)
+                _resultSearchState.postError(it)
             }
         )
     }
