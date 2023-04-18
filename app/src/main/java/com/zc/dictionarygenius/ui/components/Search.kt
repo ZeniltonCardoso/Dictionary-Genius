@@ -1,6 +1,5 @@
 package com.zc.dictionarygenius.ui.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,7 +37,6 @@ fun SearchBar(
     onComponentClick: (() -> Unit)? = null,
     color: Color = Color.Black,
     mask: VisualTransformation = VisualTransformation.None,
-    @DrawableRes leftIcon: Int = com.google.android.material.R.drawable.ic_search_black_24,
     showCloseIcon: Boolean = false
 ) {
     Column(
@@ -97,7 +95,7 @@ fun SearchBar(
             ),
             leadingIcon = inputTextIcon(
                 color = color,
-                resourceId = leftIcon,
+                resourceId = com.google.android.material.R.drawable.ic_search_black_24,
                 onClick = null,
             ),
             trailingIcon = searchBarIconRight(

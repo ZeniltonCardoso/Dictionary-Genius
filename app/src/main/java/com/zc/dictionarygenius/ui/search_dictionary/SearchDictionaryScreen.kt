@@ -30,7 +30,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -73,7 +72,7 @@ fun SearchDictionaryScreen(
                 keyboardController?.hide()
             }
         )
-        viewModel.uiState.data?.map {
+        viewModel.uiState.data?.forEach {
             dictionaryResponse = it
         }
         LaunchedEffect(key1 = searchInput, block = {
@@ -89,8 +88,8 @@ fun SearchDictionaryScreen(
                 }
             }
         })
-        if (searchInput.length >= 2) {
-            Spacer(Modifier.height(DefaultPadding))
+        if (!dictionaryResponse.meanings.isNullOrEmpty()) {
+            Spacer(Modifier.height(12.dp))
             Card(
                 modifier = Modifier
                     .padding(vertical = 24.dp, horizontal = 16.dp)
@@ -141,13 +140,11 @@ fun SearchDictionaryScreen(
             }
         }
     }
+
+    @Composable
+    fun ScreenPreview() {
+        val navController = rememberNavController()
+        SearchDictionaryScreen(navController)
+    }
 }
 
-@Preview
-@Composable
-fun ScreenPreview() {
-    val navController = rememberNavController()
-    SearchDictionaryScreen(navController)
-}
-
-private val DefaultPadding = 12.dp

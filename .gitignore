@@ -14,3 +14,5 @@
 .gradle/file-system.probe
 
 .idea/gradle.xml
+
+.idea/inspectionProfiles/Project_Default.xml
