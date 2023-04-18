@@ -9,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.ui.accounts.AccountsScreen
-import com.zc.dictionarygenius.ui.bills.BillsScreen
 import com.zc.dictionarygenius.ui.search_dictionary.SearchDictionaryScreen
 import com.zc.dictionarygenius.ui.theme.Theme
 
@@ -30,7 +29,6 @@ fun DictionaryGeniusApp() {
             NavHost(navController = navController, startDestination = "SearchDictionaryScreen") {
                 composable("SearchDictionaryScreen") { SearchDictionaryScreen(navController) }
                 composable("AccountsScreen") { AccountsScreen(navController) }
-                composable("BillsScreen") { BillsScreen(navController) }
             }
         }
     }

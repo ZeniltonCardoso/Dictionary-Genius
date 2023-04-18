@@ -1,15 +1,15 @@
-package com.zc.dictionarygenius.data
+package com.zc.dictionarygenius.data_remote.service
 
-import com.zc.dictionarygenius.data.Endpoint.SecurityContact.SECURITY_CONTACT_SEND_EMAIL
-import com.zc.dictionarygenius.data.Endpoint.SecurityContact.WORK
 import com.zc.dictionarygenius.data.model.DictionaryResponse
+import com.zc.dictionarygenius.data_remote.service.EnglishDictionaryService.SecurityContact.SECURITY_CONTACT_SEND_EMAIL
+import com.zc.dictionarygenius.data_remote.service.EnglishDictionaryService.SecurityContact.WORK
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface Endpoint {
+interface EnglishDictionaryService {
     @GET(SECURITY_CONTACT_SEND_EMAIL)
-    fun getPosts(
+    fun getEnglishWords(
         @Path(WORK) word: String
     ) : Call<List<DictionaryResponse>>
 

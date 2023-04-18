@@ -23,8 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.zc.dictionarygenius.R
 import java.text.DecimalFormat
@@ -42,19 +40,7 @@ fun AccountRow(
         color = color,
         title = name,
         subtitle = stringResource(R.string.account_redacted) + AccountDecimalFormat.format(number),
-        amount = amount,
-        negative = false
-    )
-}
-
-@Composable
-fun BillRow(name: String, due: String, amount: Float, color: Color) {
-    BaseRow(
-        color = color,
-        title = name,
-        subtitle = "Due $due",
-        amount = amount,
-        negative = true
+        amount = amount
     )
 }
 
@@ -64,18 +50,12 @@ private fun BaseRow(
     color: Color,
     title: String,
     subtitle: String,
-    amount: Float,
-    negative: Boolean
+    amount: Float
 ) {
-    val dollarSign = if (negative) "–$ " else "$ "
     val formattedAmount = formatAmount(amount)
     Row(
         modifier = modifier
-            .height(68.dp)
-            .clearAndSetSemantics {
-                contentDescription =
-                    "$title account ending in ${subtitle.takeLast(4)}, current balance $dollarSign$formattedAmount"
-            },
+            .height(68.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         val typography = MaterialTheme.typography
@@ -94,11 +74,6 @@ private fun BaseRow(
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = dollarSign,
-                style = typography.h6,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
             Text(
                 text = formattedAmount,
                 style = typography.h6,
@@ -140,8 +115,3 @@ fun formatAmount(amount: Float): String {
 
 private val AccountDecimalFormat = DecimalFormat("####")
 private val AmountDecimalFormat = DecimalFormat("#,###.##")
-
-fun <E> List<E>.extractProportions(selector: (E) -> Float): List<Float> {
-    val total = this.sumOf { selector(it).toDouble() }
-    return this.map { (selector(it) / total).toFloat() }
-}

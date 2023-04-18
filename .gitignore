@@ -6,3 +6,13 @@
 .gradle/8.0/executionHistory/
 
 .gradle/8.0/fileHashes/
+
+.idea/misc.xml
+
+.idea/modules/app/DictionaryGenius.app.iml
+
+.gradle/file-system.probe
+
+.idea/gradle.xml
+
+.idea/inspectionProfiles/Project_Default.xml
