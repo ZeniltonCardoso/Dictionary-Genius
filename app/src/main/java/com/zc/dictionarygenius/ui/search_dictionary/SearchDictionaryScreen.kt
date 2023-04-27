@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -89,10 +90,9 @@ private fun Search(
     SearchBar(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = 32.dp),
+            .padding(top = 40.dp),
         value = searchInput,
         hint = stringResource(R.string.search_your_word_here),
-        color = Color.Blue,
         onValueChanged = {
             searchInput = it
         },
@@ -150,7 +150,7 @@ private fun BodyScreen(colors: Colors) {
                         val result = definitions.joinToString(separator = "\n") { example ->
                             example.example
                         }
-                        if (result.isNotEmpty()) {
+                        if (result.isNotEmpty() and result.isNotBlank()) {
                             Spacer(modifier = Modifier.size(8.dp))
                             Text(
                                 modifier = Modifier

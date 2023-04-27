@@ -12,6 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -21,11 +23,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.google.android.material.R
 
 @Composable
 fun SearchBar(
@@ -35,7 +41,6 @@ fun SearchBar(
     hint: String = "",
     onIconCloseClick: (() -> Unit)? = null,
     onComponentClick: (() -> Unit)? = null,
-    color: Color = Color.Black,
     mask: VisualTransformation = VisualTransformation.None,
     showCloseIcon: Boolean = false
 ) {
@@ -52,7 +57,7 @@ fun SearchBar(
             )
         else modifier
     ) {
-        TextField(
+        OutlinedTextField(
             value = value,
             onValueChange = { input ->
                 onValueChanged.invoke(input)
@@ -60,9 +65,8 @@ fun SearchBar(
             maxLines = 1,
             singleLine = true,
             shape = RoundedCornerShape(size = 40.dp),
-            textStyle = MaterialTheme.typography.button.copy(
-                color = Color.Black
-            ),
+            textStyle = TextStyle(fontWeight = FontWeight.Bold,
+                fontSize = 24.sp),
             enabled = onComponentClick == null,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Search,
@@ -73,7 +77,7 @@ fun SearchBar(
                 Text(
                     text = hint,
                     style = MaterialTheme.typography.button.copy(
-                        color = Color.Black
+                        color = colors.primary
                     )
                 )
             },
@@ -82,20 +86,20 @@ fun SearchBar(
                 .heightIn(min = 40.dp)
                 .border(
                     width = 1.dp,
-                    color = Color.White,
-                    shape = RoundedCornerShape(size = 40.dp)
+                    color = colors.primary,
+                    shape = RoundedCornerShape(size = 24.dp)
                 ),
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White,
+                backgroundColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
-                disabledTextColor = Color.Black,
-                cursorColor = Color.Black
+                disabledTextColor = colors.primary,
+                cursorColor = colors.primary
             ),
             leadingIcon = inputTextIcon(
-                color = color,
-                resourceId = com.google.android.material.R.drawable.ic_search_black_24,
+                color = colors.primary,
+                resourceId = R.drawable.ic_search_black_24,
                 onClick = null,
             ),
             trailingIcon = searchBarIconRight(
@@ -142,9 +146,9 @@ fun searchBarIconRight(
     return when {
         isEmpty -> null
         else -> inputTextIcon(
-            resourceId = com.google.android.material.R.drawable.ic_m3_chip_close,
+            resourceId = R.drawable.ic_m3_chip_close,
             onClick = onClick,
-            color = Color.Blue
+            color = colors.primary
         )
     }
 }
