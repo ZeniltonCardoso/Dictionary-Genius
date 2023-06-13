@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "226662399493",
+    "firebase_url": "https://dictionary-genius-4d272-default-rtdb.firebaseio.com",
+    "project_id": "dictionary-genius-4d272",
+    "storage_bucket": "dictionary-genius-4d272.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226662399493:android:222bc1e36e81bd1cf3a66c",
+        "android_client_info": {
+          "package_name": "com.zc.dictionarygenius"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "226662399493-295vs2vkld7mpqbfvttg3ll7o9ftlmc8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYwEbzq8VdGmghCBGGScf60MgBgOF6Uvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "226662399493-295vs2vkld7mpqbfvttg3ll7o9ftlmc8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

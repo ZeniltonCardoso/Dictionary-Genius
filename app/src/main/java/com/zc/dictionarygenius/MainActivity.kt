@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.zc.dictionarygenius.ui.accounts.AccountsScreen
+import com.zc.dictionarygenius.ui.contacts.ContactsScreen
+import com.zc.dictionarygenius.ui.login.LoginScreen
+import com.zc.dictionarygenius.ui.search_contacts.SearchContactsScreen
 import com.zc.dictionarygenius.ui.search_dictionary.SearchDictionaryScreen
 import com.zc.dictionarygenius.ui.theme.Theme
 
@@ -26,9 +28,11 @@ fun DictionaryGeniusApp() {
     Theme {
         val navController = rememberNavController()
         Column {
-            NavHost(navController = navController, startDestination = "SearchDictionaryScreen") {
+            NavHost(navController = navController, startDestination = "LoginScreen") {
                 composable("SearchDictionaryScreen") { SearchDictionaryScreen(navController) }
-                composable("AccountsScreen") { AccountsScreen(navController) }
+                composable("LoginScreen") { LoginScreen(navController) }
+                composable("ContactsScreen") { ContactsScreen(navController) }
+                composable("SearchContactsScreen") { SearchContactsScreen(navController) }
             }
         }
     }

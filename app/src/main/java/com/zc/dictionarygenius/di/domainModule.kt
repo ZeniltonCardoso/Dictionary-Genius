@@ -3,6 +3,7 @@ package com.zc.dictionarygenius.di
 import com.zc.dictionarygenius.data.repository.EnglishDictionaryRepositoryImpl
 import com.zc.dictionarygenius.domain.core.ThreadContextProvider
 import com.zc.dictionarygenius.domain.repository.EnglishDictionaryRepository
+import com.zc.dictionarygenius.domain.repository.Repository
 import com.zc.dictionarygenius.domain.usecase.GetEnglishDictionaryUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,5 +27,6 @@ val domainModule = module {
     }
 
     single<EnglishDictionaryRepository> { EnglishDictionaryRepositoryImpl(get()) }
+    single { Repository.getInstance() }
 
 }
