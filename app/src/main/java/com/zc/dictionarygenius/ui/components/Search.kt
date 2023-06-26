@@ -15,7 +15,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -42,7 +41,8 @@ fun SearchBar(
     onIconCloseClick: (() -> Unit)? = null,
     onComponentClick: (() -> Unit)? = null,
     mask: VisualTransformation = VisualTransformation.None,
-    showCloseIcon: Boolean = false
+    showCloseIcon: Boolean = false,
+    maxLength: Int? = null
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,6 +60,7 @@ fun SearchBar(
         OutlinedTextField(
             value = value,
             onValueChange = { input ->
+                if (input.length > (maxLength ?: 0)) return@OutlinedTextField
                 onValueChanged.invoke(input)
             },
             maxLines = 1,
@@ -108,6 +109,25 @@ fun SearchBar(
             )
         )
     }
+}
+
+@Composable
+fun SearchCepText(
+    modifier: Modifier = Modifier,
+    value: String,
+    hint: String = "",
+    onValueChanged: (String) -> Unit = {},
+    onIconCloseClick: (() -> Unit)? = null,
+) {
+    SearchBar(
+        modifier = modifier,
+        value = value,
+        onValueChanged = onValueChanged,
+        mask = Mask.buildCep(),
+        maxLength = 8,
+        hint = hint,
+        onIconCloseClick = onIconCloseClick
+    )
 }
 
 @Composable

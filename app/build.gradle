@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -48,15 +50,18 @@ android {
 
 dependencies {
 
-    implementation 'androidx.room:room-ktx:2.5.1'
+    implementation 'androidx.room:room-ktx:2.5.2'
     implementation 'androidx.test:monitor:1.6.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.6.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
     def composeBom = platform('androidx.compose:compose-bom:2023.01.00')
     implementation(composeBom)
     androidTestImplementation(composeBom)
 
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-ktx:1.10.0")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("com.google.android.material:material:1.9.0")
 
     // Compose
     implementation("androidx.compose.runtime:runtime")
@@ -64,32 +69,40 @@ dependencies {
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material:material")
     implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     debugImplementation("androidx.compose.ui:ui-tooling")
 
-    //ViewModel
+    // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
 
     // Koin
-    implementation("io.insert-koin:koin-androidx-compose:3.4.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.5")
 
-    //Gson
+    // Gson
     implementation('com.google.code.gson:gson:2.10.1')
 
-    //Retrofit
+    // Retrofit
     implementation('com.squareup.retrofit2:retrofit:2.9.0')
     implementation('com.squareup.retrofit2:converter-gson:2.9.0')
-    implementation('com.squareup.okhttp3:logging-interceptor:4.9.0')
+    implementation('com.squareup.okhttp3:logging-interceptor:4.10.0')
     implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
 
-    //Navigation
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.6.0")
 
-    //Kotlin
+    // Kotlin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 
-    //UI
+    // UI
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
 
+    // Splash Screen
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    // Bom Firebase
+    implementation platform('com.google.firebase:firebase-bom:32.0.0')
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
 }

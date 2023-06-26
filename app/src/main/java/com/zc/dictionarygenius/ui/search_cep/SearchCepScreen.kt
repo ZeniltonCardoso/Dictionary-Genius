@@ -1,4 +1,5 @@
-package com.zc.dictionarygenius.ui.search_dictionary
+package com.zc.dictionarygenius.ui.search_cep
+
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,43 +30,26 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.zc.dictionarygenius.R
-import com.zc.dictionarygenius.domain.model.DictionaryModel
-import com.zc.dictionarygenius.ui.components.SearchBar
+import com.zc.dictionarygenius.domain.model.CepModel
+import com.zc.dictionarygenius.ui.components.AlertDialog
+import com.zc.dictionarygenius.ui.components.SearchCepText
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 
-private var dictionaryResponse by mutableStateOf(DictionaryModel())
+private var searchResponse by mutableStateOf(CepModel())
+private var errorState by mutableStateOf(false)
 
 @Composable
-fun SearchDictionaryScreen(
+fun SearchCepScreen(
     navHostController: NavHostController
 ) {
-    val viewModel = koinViewModel<SearchDictionaryViewModel>()
+    val viewModel = koinViewModel<SearchCepViewModel>()
     Handler(viewModel)
-    BodyScreen(viewModel, navHostController)
-}
-
-@Composable
-fun Handler(viewModel: SearchDictionaryViewModel) {
-    viewModel.resultSearchState.stateHandler(
-        onSuccess = {
-            dictionaryResponse = it.firstOrNull() ?: DictionaryModel()
-        }
-    )
-}
-
-@Composable
-private fun BodyScreen(
-    viewModel: SearchDictionaryViewModel,
-    navHostController: NavHostController
-) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -77,7 +60,7 @@ private fun BodyScreen(
             .padding(horizontal = 16.dp)
     ) {
         Search(viewModel)
-        BodyScreen(colors)
+        BodyScreen(colors, viewModel)
         Spacer(modifier = Modifier.weight(1f))
         Button(
             modifier = Modifier
@@ -85,10 +68,10 @@ private fun BodyScreen(
                 .padding(bottom = 16.dp),
             onClick = {
                 viewModel.resetState()
-                navHostController.navigate("SearchCepScreen")
+                navHostController.navigate("SearchDictionaryScreen")
             }
         ) {
-            Text(text = "Pesquisar CEP")
+            Text(text = "Fazer Login")
         }
     }
 }
@@ -96,23 +79,25 @@ private fun BodyScreen(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun Search(
-    viewModel: SearchDictionaryViewModel
+    viewModel: SearchCepViewModel
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     var searchInput by remember {
         mutableStateOf("")
     }
-    SearchBar(
+    SearchCepText(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 40.dp),
         value = searchInput,
-        hint = stringResource(R.string.search_your_word_here),
+        hint = "Pesquisar Cep",
         onValueChanged = {
             searchInput = it
         },
         onIconCloseClick = {
             searchInput = ""
+
+            viewModel.resetState()
             keyboardController?.hide()
         }
     )
@@ -120,20 +105,20 @@ private fun Search(
         when {
             searchInput.length == 2 -> {
                 delay(500)
-                viewModel.searchEnglish(searchInput)
+                viewModel.searchCep(searchInput)
             }
 
             searchInput.length > 2 -> {
                 delay(1_350)
-                viewModel.searchEnglish(searchInput)
+                viewModel.searchCep(searchInput)
             }
         }
     })
 }
 
 @Composable
-private fun BodyScreen(colors: Colors) {
-    if (!dictionaryResponse.meanings.isNullOrEmpty()) {
+private fun BodyScreen(colors: Colors, viewModel: SearchCepViewModel) {
+    if (searchResponse.cep.isNotEmpty()) {
         Spacer(Modifier.height(12.dp))
         Card(
             modifier = Modifier
@@ -149,38 +134,56 @@ private fun BodyScreen(colors: Colors) {
                 verticalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
-                dictionaryResponse.meanings?.map {
-                    val joinToString = it.synonyms.joinToString(", ")
-                    if (it.synonyms.isNotEmpty()) Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        textAlign = TextAlign.Center,
-                        text = "Synonyms: $joinToString.",
-                        style = MaterialTheme.typography.body2.copy(
-                            Color.White
-                        )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    text = searchResponse.cep,
+                    style = MaterialTheme.typography.body2.copy(
+                        Color.White
                     )
-                    it.definitions?.let { definitions ->
-                        val result = definitions.joinToString(separator = "\n") { example ->
-                            example.example
-                        }
-                        if (result.isNotEmpty() and result.isNotBlank()) {
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Text(
-                                modifier = Modifier
-                                    .padding(bottom = 8.dp)
-                                    .fillMaxWidth(),
-                                textAlign = TextAlign.Center,
-                                text = "Definitions: $result",
-                                style = MaterialTheme.typography.body2.copy(
-                                    Color.White
-                                )
-                            )
-                        }
-                    }
-                }
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    text = searchResponse.logradouro,
+                    style = MaterialTheme.typography.body2.copy(
+                        Color.White
+                    )
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    textAlign = TextAlign.Center,
+                    text = searchResponse.bairro,
+                    style = MaterialTheme.typography.body2.copy(
+                        Color.White
+                    )
+                )
             }
         }
     }
+    if (errorState) {
+        AlertDialog(
+            onDismiss = {
+                viewModel.resetState()
+                errorState = false
+            },
+            bodyText = "Não foi encontrado",
+            buttonText = "Ok"
+        )
+    }
+}
+
+@Composable
+fun Handler(viewModel: SearchCepViewModel) {
+    viewModel.resultSearchState.stateHandler(
+        onSuccess = {
+            searchResponse = it
+        }
+    )
 }
