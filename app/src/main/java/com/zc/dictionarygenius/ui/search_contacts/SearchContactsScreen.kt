@@ -68,7 +68,7 @@ fun SearchContactsScreen(
                 .padding(bottom = 16.dp),
             onClick = {
                 viewModel.resetState()
-                navHostController.navigate("LoginScreen")
+                navHostController.navigate("SearchDictionaryScreen")
             }
         ) {
             Text(text = "Fazer Login")

@@ -3,7 +3,7 @@ package com.zc.dictionarygenius
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.getValue
 
-class AppDataBase private constructor() {
+class MainDataBase private constructor() {
     private val database = FirebaseDatabase.getInstance()
     private val dbRootRef = database.reference
     private val userNode = dbRootRef.child("users")
@@ -42,13 +42,13 @@ class AppDataBase private constructor() {
     }
 
     companion object {
-        private var appDatabase: AppDataBase? = null
+        private var mainDatabase: MainDataBase? = null
 
-        fun getInstance(): AppDataBase {
-            if (appDatabase == null)
-                appDatabase =
-                    AppDataBase()
-            return appDatabase!!
+        fun getInstance(): MainDataBase {
+            if (mainDatabase == null)
+                mainDatabase =
+                    MainDataBase()
+            return mainDatabase!!
         }
     }
 }

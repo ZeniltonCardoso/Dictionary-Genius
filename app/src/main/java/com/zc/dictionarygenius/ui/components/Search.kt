@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -37,7 +38,8 @@ fun SearchBar(
     onComponentClick: (() -> Unit)? = null,
     color: Color = Color.Black,
     mask: VisualTransformation = VisualTransformation.None,
-    showCloseIcon: Boolean = false
+    showCloseIcon: Boolean = false,
+    maxLength: Int? = null
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -55,6 +57,7 @@ fun SearchBar(
         TextField(
             value = value,
             onValueChange = { input ->
+                if (input.length > (maxLength ?: 0)) return@TextField
                 onValueChanged.invoke(input)
             },
             maxLines = 1,
@@ -104,6 +107,25 @@ fun SearchBar(
             )
         )
     }
+}
+
+@Composable
+fun SearchCepText(
+    modifier: Modifier = Modifier,
+    value: String,
+    hint: String = "",
+    onValueChanged: (String) -> Unit = {},
+    onIconCloseClick: (() -> Unit)? = null,
+) {
+    SearchBar(
+        modifier = modifier,
+        value = value,
+        onValueChanged = onValueChanged,
+        mask = Mask.buildCep(),
+        maxLength = 8,
+        hint = hint,
+        onIconCloseClick = onIconCloseClick
+    )
 }
 
 @Composable

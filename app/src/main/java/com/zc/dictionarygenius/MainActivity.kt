@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zc.dictionarygenius.ui.contacts.ContactsScreen
 import com.zc.dictionarygenius.ui.login.LoginScreen
+import com.zc.dictionarygenius.ui.search_cep.SearchCepScreen
 import com.zc.dictionarygenius.ui.search_contacts.SearchContactsScreen
 import com.zc.dictionarygenius.ui.search_dictionary.SearchDictionaryScreen
 import com.zc.dictionarygenius.ui.theme.Theme
@@ -33,6 +34,7 @@ fun DictionaryGeniusApp() {
                 composable("LoginScreen") { LoginScreen(navController) }
                 composable("ContactsScreen") { ContactsScreen(navController) }
                 composable("SearchContactsScreen") { SearchContactsScreen(navController) }
+                composable("SearchCepScreen") { SearchCepScreen(navController) }
             }
         }
     }
